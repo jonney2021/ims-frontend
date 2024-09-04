@@ -27,7 +27,7 @@ const Sidebar = () => {
         } lg:translate-x-0 w-64`}
       >
         <div className="flex items-center justify-center h-16 shadow-md">
-          <h1 className="text-2xl font-bold">Inventory System</h1>
+          <h1 className="text-xl font-bold">Inventory System</h1>
         </div>
         <nav className="mt-10">
           <ul>

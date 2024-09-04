@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const Dashboard = () => {
+const Dashboard = ({ username }) => {
   const [usersCount, setUsersCount] = useState(0);
   const [categoriesCount, setCategoriesCount] = useState(0);
   const [itemsCount, setItemsCount] = useState(0);
