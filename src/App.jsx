@@ -5,11 +5,13 @@ import {
   Navigate,
 } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { useState, useEffect } from "react";
-import Login from "./components/Login";
+import Login from "./pages/Login";
+import Forgot from "./pages/Forgot";
+import Reset from "./pages/Reset";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -58,6 +60,8 @@ function App() {
                   />
                 }
               />
+              <Route path="/forgot" element={<Forgot />} />
+              <Route path="/resetpassword/:resetToken" element={<Reset />} />
             </Routes>
           </main>
           {isAuthenticated && <Footer className="hidden lg:block" />}
