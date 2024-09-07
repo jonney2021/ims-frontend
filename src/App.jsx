@@ -1,4 +1,3 @@
-// App.jsx
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,7 +12,6 @@ import { useState, useEffect } from "react";
 import Login from "./components/Login";
 
 function App() {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("isAuthenticated") === "true" // Check from local storage
   );
@@ -22,18 +20,7 @@ function App() {
   );
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 1024);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Save authentication status to local storage
-  useEffect(() => {
+    // Save authentication status to local storage
     localStorage.setItem("isAuthenticated", isAuthenticated);
   }, [isAuthenticated]);
 
@@ -73,7 +60,7 @@ function App() {
               />
             </Routes>
           </main>
-          {!isSmallScreen && isAuthenticated && <Footer />}
+          {isAuthenticated && <Footer className="hidden lg:block" />}
         </div>
       </div>
     </Router>
