@@ -1,9 +1,9 @@
-// Header.jsx
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../redux/features/auth/authSlice";
+import { logoutUser } from "../services/authService";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [dateTime, setDateTime] = useState(new Date());
@@ -13,8 +13,6 @@ const Header = () => {
   const navigate = useNavigate();
   const { username } = useSelector((state) => state.auth);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   // Update the date and time every second
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
@@ -23,13 +21,13 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get(`${API_BASE_URL}/api/users/logout`, {
-        withCredentials: true,
-      });
+      await logoutUser();
       dispatch(logout());
       navigate("/login");
+      toast.success("Logged out successfully");
     } catch (error) {
       console.error("Error logging out:", error);
+      toast.error(error.message);
     }
   };
 
