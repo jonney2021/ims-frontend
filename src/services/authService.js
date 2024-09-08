@@ -115,3 +115,41 @@ export const forgotPassword = async (email) => {
     }
   }
 };
+
+// Function to handle password reset
+export const resetPassword = async (password, confirmPassword, resetToken) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/users/resetpassword/${resetToken}`,
+      { password, confirmPassword },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Check if the response was successful
+    if (response.status === 200 && response.data) {
+      return response.data;
+    } else {
+      throw new Error("Unexpected response from server");
+    }
+  } catch (error) {
+    // Re-throw the error to be caught in the component
+    if (error.response) {
+      throw new Error(
+        error.response.data.message ||
+          "Error occurred while resetting password."
+      );
+    } else if (error.request) {
+      throw new Error(
+        "No response received from server. Please try again later."
+      );
+    } else {
+      throw new Error(
+        `An error occurred. Please try again later. (${error.message})`
+      );
+    }
+  }
+};
