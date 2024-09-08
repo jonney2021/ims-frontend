@@ -1,6 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { forgotPassword, validateEmail } from "../services/authService";
 import { FaLock } from "react-icons/fa";
 
 const Forgot = () => {
@@ -8,29 +9,32 @@ const Forgot = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Ensure this is set in your .env file
-
   const handleForgot = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess("");
 
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/users/forgotpassword`,
-        { email },
-        { headers: { "Content-Type": "application/json" } }
-      );
+    // Frontend validation
+    if (!email) {
+      setError("Please enter your email address.");
+      toast.error("Please enter your email address.");
+      return;
+    }
 
-      setSuccess(response.data.message);
-      setEmail(""); // Reset email input after success
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      const response = await forgotPassword(email);
+      setSuccess(response.message);
+      toast.success(response.message);
+      setEmail("");
     } catch (err) {
-      // Handle error from the backend or network issues
-      if (err.response && err.response.data) {
-        setError(err.response.data.message || "Something went wrong.");
-      } else {
-        setError("Error connecting to the server.");
-      }
+      setError(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -70,8 +74,8 @@ const Forgot = () => {
           </button>
         </form>
         <div className="mt-4 text-center">
-          <Link to="/" className="text-blue-500 hover:underline">
-            Home
+          <Link to="/login" className="text-blue-500 hover:underline">
+            Back to Login
           </Link>
         </div>
       </div>
