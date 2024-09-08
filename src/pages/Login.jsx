@@ -1,37 +1,57 @@
 import { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../redux/features/auth/authSlice";
+import { toast } from "react-toastify";
+import { loginUser, validateEmail } from "../services/authService";
+import Loader from "../components/Loader";
 
-const Login = ({ setIsAuthenticated, setUsername }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    // Frontend validation
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/users/login`,
-        { email, password },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      // Call the loginUser service
+      const userData = await loginUser(email, password);
+
+      // Dispatch the credentials to the Redux store
+      dispatch(
+        setCredentials({
+          isAuthenticated: true,
+          username: userData.username,
+        })
       );
 
-      if (response.status === 200) {
-        setIsAuthenticated(true);
-        setUsername(response.data.username);
-        navigate("/"); // Redirect to the dashboard
-      }
+      toast.success("Login successful");
+      navigate("/");
     } catch (err) {
-      console.error("Error during login:", err); // Log the error for debugging
-      setError("Invalid email or password. Please try again.");
+      // Handle errors from authService
+      setError(err.message);
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,8 +92,9 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+            disabled={loading}
           >
-            Login
+            {loading ? <Loader /> : "Login"}
           </button>
         </form>
         <div className="mt-4 text-center">

@@ -1,11 +1,17 @@
 // Header.jsx
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../redux/features/auth/authSlice";
 
-const Header = ({ username, setIsAuthenticated, setUsername }) => {
+const Header = () => {
   const [dateTime, setDateTime] = useState(new Date());
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { username } = useSelector((state) => state.auth);
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -20,9 +26,8 @@ const Header = ({ username, setIsAuthenticated, setUsername }) => {
       await axios.get(`${API_BASE_URL}/api/users/logout`, {
         withCredentials: true,
       });
-      // Update authentication state
-      setIsAuthenticated(false);
-      setUsername("");
+      dispatch(logout());
+      navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -72,7 +77,10 @@ const Header = ({ username, setIsAuthenticated, setUsername }) => {
             </li>
             <li>
               <button
-                onClick={handleLogout}
+                onClick={() => {
+                  handleLogout();
+                  setIsDropdownOpen(false);
+                }}
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100"
               >
                 Logout

@@ -4,69 +4,43 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Forgot from "./pages/Forgot";
 import Reset from "./pages/Reset";
+import Layout from "./components/Layout";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+axios.defaults.withCredentials = true;
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("isAuthenticated") === "true" // Check from local storage
-  );
-  const [username, setUsername] = useState(
-    localStorage.getItem("username") || "User"
-  );
-
-  useEffect(() => {
-    // Save authentication status to local storage
-    localStorage.setItem("isAuthenticated", isAuthenticated);
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    localStorage.setItem("username", username);
-  }, [username]);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <Router>
-      <div className="flex min-h-screen">
-        {isAuthenticated && <Sidebar />}
-        <div className="flex flex-col flex-1">
-          {isAuthenticated && (
-            <Header
-              username={username}
-              setIsAuthenticated={setIsAuthenticated}
-              setUsername={setUsername}
-            />
-          )}
-          <main className="flex-1 p-4 lg:ml-0">
-            <Routes>
-              {/* Redirect to /login if not authenticated */}
-              <Route
-                path="/"
-                element={
-                  isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
-                }
-              />
-              <Route
-                path="/login"
-                element={
-                  <Login
-                    setIsAuthenticated={setIsAuthenticated}
-                    setUsername={setUsername}
-                  />
-                }
-              />
-              <Route path="/forgot" element={<Forgot />} />
-              <Route path="/resetpassword/:resetToken" element={<Reset />} />
-            </Routes>
-          </main>
-          {isAuthenticated && <Footer className="hidden lg:block" />}
-        </div>
-      </div>
+      <ToastContainer />
+      <Routes>
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+        />
+        <Route path="/forgot" element={<Forgot />} />
+        <Route path="/resetpassword/:resetToken" element={<Reset />} />
+        <Route
+          path="/*"
+          element={
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                {/* Add other authenticated routes here */}
+              </Routes>
+            </Layout>
+          }
+        />
+      </Routes>
     </Router>
   );
 }
