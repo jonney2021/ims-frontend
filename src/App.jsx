@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddItem from "./pages/AddItem";
 
 axios.defaults.withCredentials = true;
 
@@ -35,7 +36,7 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                {/* Add other authenticated routes here */}
+                <Route path="/add-item" element={<AddItem />} />
               </Routes>
             </Layout>
           }
