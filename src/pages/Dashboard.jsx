@@ -159,7 +159,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
         <Link
-          to="/items/add"
+          to="/items/add-item"
           className="bg-blue-500 text-white p-4 rounded shadow-md text-center"
         >
           Add New Item

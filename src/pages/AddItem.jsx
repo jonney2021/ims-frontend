@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ItemForm from "../components/ItemForm";
 import { useSelector, useDispatch } from "react-redux";
 import {
   createItemAsync,
   selectIsLoading,
 } from "../redux/features/item/itemSlice";
-// import { fetchCategories } from "../redux/features/category/categorySlice";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
+import { getCategoriesAsync } from "../redux/features/category/categorySlice";
 
 const initialState = {
   name: "",
@@ -22,23 +22,16 @@ const AddItem = () => {
   const [itemPhoto, setItemPhoto] = useState("");
   const [itemPhotoPreview, setItemPhotoPreview] = useState("");
   const [description, setDescription] = useState("");
-  //   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const isLoading = useSelector(selectIsLoading);
 
-  //   useEffect(() => {
-  //     const loadCategories = async () => {
-  //       try {
-  //         const result = await dispatch(fetchCategories()).unwrap();
-  //         setCategories(result);
-  //       } catch (error) {
-  //         console.error("Failed to fetch categories:", error);
-  //       }
-  //     };
-  //     loadCategories();
-  //   }, [dispatch]);
+  const { categories } = useSelector((state) => state.category);
+
+  useEffect(() => {
+    dispatch(getCategoriesAsync());
+  }, [dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -79,19 +72,20 @@ const AddItem = () => {
   };
 
   return (
-    <div>
+    <div className="max-w-2xl mx-auto px-4 py-8">
       {isLoading && <Loader />}
-      <h1>Add Item</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        Add Item
+      </h1>
       <ItemForm
         item={item}
-        // itemPhoto={itemPhoto}
         itemPhotoPreview={itemPhotoPreview}
         description={description}
         setDescription={setDescription}
         handleInputChange={handleInputChange}
         handlePhotoChange={handlePhotoChange}
         saveItem={saveItem}
-        // categories={categories}
+        categories={categories}
       />
     </div>
   );

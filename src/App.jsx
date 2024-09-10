@@ -14,6 +14,7 @@ import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddItem from "./pages/AddItem";
+import ItemListPage from "./pages/ItemListPage";
 
 axios.defaults.withCredentials = true;
 
@@ -36,7 +37,8 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/add-item" element={<AddItem />} />
+                <Route path="/items/add-item" element={<AddItem />} />
+                <Route path="/items" element={<ItemListPage />} />
               </Routes>
             </Layout>
           }

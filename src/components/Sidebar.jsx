@@ -55,7 +55,7 @@ const Sidebar = () => {
             </li>
             <li className="px-4 py-2 hover:bg-gray-700">
               <Link to="/items" onClick={toggleSidebar}>
-                Item
+                Items
               </Link>
             </li>
             <li className="px-4 py-2 hover:bg-gray-700">

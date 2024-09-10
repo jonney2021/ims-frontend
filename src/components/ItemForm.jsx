@@ -53,11 +53,12 @@ const ItemForm = ({
           required
         >
           <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
+          {categories &&
+            categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
         </select>
       </div>
       <div className="mb-4">
