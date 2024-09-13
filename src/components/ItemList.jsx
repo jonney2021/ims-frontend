@@ -1,20 +1,28 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getItemsAsync,
   selectAllItems,
   selectIsLoading,
 } from "../redux/features/item/itemSlice";
+import {
+  selectSearchTerm,
+  selectFilteredItems,
+  FILTER_ITEMS,
+} from "../redux/features/item/filterSlice";
+import ReactPaginate from "react-paginate";
 import Loader from "./Loader";
+import Search from "./Search";
 import { FaEye, FaEdit, FaTrash, FaSort } from "react-icons/fa";
 
 const ItemList = () => {
   const dispatch = useDispatch();
   const items = useSelector(selectAllItems);
+  const filteredItems = useSelector(selectFilteredItems);
   const isLoading = useSelector(selectIsLoading);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const searchTerm = useSelector(selectSearchTerm);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage] = useState(5);
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
@@ -24,16 +32,12 @@ const ItemList = () => {
     dispatch(getItemsAsync());
   }, [dispatch]);
 
-  // Search and filter
-  const filteredItems = items.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.itemCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.category.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    dispatch(FILTER_ITEMS({ items, searchTerm }));
+  }, [items, searchTerm, dispatch]);
 
   // Sorting
-  const sortedItems = React.useMemo(() => {
+  const sortedItems = useMemo(() => {
     let sortableItems = [...filteredItems];
     if (sortConfig.key !== null) {
       sortableItems.sort((a, b) => {
@@ -59,11 +63,13 @@ const ItemList = () => {
   }, [filteredItems, sortConfig]);
 
   // Pagination
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedItems.slice(indexOfFirstItem, indexOfLastItem);
+  const pageCount = Math.ceil(sortedItems.length / itemsPerPage);
+  const offset = currentPage * itemsPerPage;
+  const currentItems = sortedItems.slice(offset, offset + itemsPerPage);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
 
   const requestSort = (key) => {
     let direction = "ascending";
@@ -79,86 +85,84 @@ const ItemList = () => {
 
   return (
     <div className="w-full">
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search items..."
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <div className="overflow-x-auto shadow-md rounded-lg">
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr className="bg-gray-800 text-white uppercase text-xs sm:text-sm leading-normal">
-              {["name", "item code", "quantity", "category"].map((key) => (
-                <th
-                  key={key}
-                  className="py-2 px-3 sm:py-3 sm:px-6 text-left cursor-pointer hover:bg-gray-700"
-                  onClick={() => requestSort(key)}
-                >
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                  <FaSort className="inline ml-1" />
-                </th>
-              ))}
-              <th className="py-2 px-3 sm:py-3 sm:px-6 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-xs sm:text-sm font-medium">
-            {currentItems.map((item) => (
-              <tr
-                key={item._id}
-                className="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td className="py-2 px-3 sm:py-3 sm:px-6 text-left whitespace-nowrap">
-                  {item.name}
-                </td>
-                <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
-                  {item.itemCode}
-                </td>
-                <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
-                  {item.quantity}
-                </td>
-                <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
-                  {item.category.name}
-                </td>
-                <td className="py-2 px-3 sm:py-3 sm:px-6 text-center">
-                  <div className="flex items-center justify-center space-x-2">
-                    <button className="w-5 h-5 transform hover:scale-110 text-blue-500 hover:text-blue-700">
-                      <FaEye size={16} />
-                    </button>
-                    <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
-                      <FaEdit size={16} />
-                    </button>
-                    <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
-                      <FaTrash size={16} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="flex justify-center mt-4 flex-wrap">
-        {Array.from(
-          { length: Math.ceil(sortedItems.length / itemsPerPage) },
-          (_, i) => (
-            <button
-              key={i}
-              onClick={() => paginate(i + 1)}
-              className={`mx-1 px-2 sm:px-3 py-1 rounded text-sm ${
-                currentPage === i + 1
-                  ? "bg-gray-800 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              {i + 1}
-            </button>
-          )
-        )}
-      </div>
+      <Search placeholder="Search items..." />
+      {sortedItems.length === 0 ? (
+        <div className="text-center py-4 text-gray-500">No product found.</div>
+      ) : (
+        <>
+          <div className="overflow-x-auto shadow-md rounded-lg">
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr className="bg-gray-800 text-white uppercase text-xs sm:text-sm leading-normal">
+                  {["name", "itemCode", "quantity", "category"].map((key) => (
+                    <th
+                      key={key}
+                      className="py-2 px-3 sm:py-3 sm:px-6 text-left cursor-pointer hover:bg-gray-700"
+                      onClick={() => requestSort(key)}
+                    >
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                      <FaSort className="inline ml-1" />
+                    </th>
+                  ))}
+                  <th className="py-2 px-3 sm:py-3 sm:px-6 text-center">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 text-xs sm:text-sm font-medium">
+                {currentItems.map((item) => (
+                  <tr
+                    key={item._id}
+                    className="border-b border-gray-200 hover:bg-gray-100"
+                  >
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left whitespace-nowrap">
+                      {item.name}
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                      {item.itemCode}
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                      {item.quantity}
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                      {item.category.name}
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-center">
+                      <div className="flex items-center justify-center space-x-2">
+                        <button className="w-5 h-5 transform hover:scale-110 text-blue-500 hover:text-blue-700">
+                          <FaEye size={16} />
+                        </button>
+                        <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
+                          <FaEdit size={16} />
+                        </button>
+                        <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
+                          <FaTrash size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel="Next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={1}
+            pageCount={pageCount}
+            previousLabel="< Previous"
+            renderOnZeroPageCount={null}
+            containerClassName="flex justify-center mt-4 space-x-2"
+            pageClassName="px-3 py-2 rounded-lg bg-gray-200 text-gray-700 cursor-pointer hover:bg-gray-300"
+            activeClassName="bg-gray-800 text-white"
+            previousClassName="px-3 py-2 rounded-lg bg-gray-200 text-gray-700 cursor-pointer hover:bg-gray-300"
+            nextClassName="px-3 py-2 rounded-lg bg-gray-200 text-gray-700 cursor-pointer hover:bg-gray-300"
+            disabledClassName="opacity-50 cursor-not-allowed"
+          />
+        </>
+      )}
     </div>
   );
 };
