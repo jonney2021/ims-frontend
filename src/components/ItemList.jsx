@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteItemAsync,
   getItemsAsync,
   selectAllItems,
   selectIsLoading,
@@ -14,6 +15,8 @@ import ReactPaginate from "react-paginate";
 import Loader from "./Loader";
 import Search from "./Search";
 import { FaEye, FaEdit, FaTrash, FaSort } from "react-icons/fa";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const ItemList = () => {
   const dispatch = useDispatch();
@@ -79,6 +82,29 @@ const ItemList = () => {
     setSortConfig({ key, direction });
   };
 
+  const delItem = async (id) => {
+    console.log("Deleting item with id: ", id);
+    await dispatch(deleteItemAsync(id));
+    // Refetch items
+    await dispatch(getItemsAsync());
+  };
+
+  const confirmDelete = (id, name) => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: `Are you sure you want to delete the item ${name}?`,
+      buttons: [
+        {
+          label: "Delete",
+          onClick: () => delItem(id),
+        },
+        {
+          label: "Cancel",
+        },
+      ],
+    });
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -136,7 +162,10 @@ const ItemList = () => {
                           <FaEdit size={16} />
                         </button>
                         <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
-                          <FaTrash size={16} />
+                          <FaTrash
+                            size={16}
+                            onClick={() => confirmDelete(item._id, item.name)}
+                          />
                         </button>
                       </div>
                     </td>

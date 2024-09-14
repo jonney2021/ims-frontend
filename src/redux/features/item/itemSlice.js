@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createItem, getItems } from "../../../services/itemService";
+import {
+  createItem,
+  deleteItem,
+  getItems,
+} from "../../../services/itemService";
 import { toast } from "react-toastify";
 
 // Async thunk for creating an item
@@ -25,6 +29,19 @@ export const getItemsAsync = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getItems();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Delete an item
+export const deleteItemAsync = createAsyncThunk(
+  "items/deleteItem",
+  async (itemId, { rejectWithValue }) => {
+    try {
+      const response = await deleteItem(itemId);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -73,6 +90,24 @@ const itemSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(getItemsAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+      .addCase(deleteItemAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteItemAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.items = state.items.filter(
+          (item) => item._id !== action.payload._id
+        );
+        state.message = action.payload.message;
+        toast.success(action.payload.message);
+      })
+      .addCase(deleteItemAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
