@@ -6,7 +6,7 @@ const Dashboard = () => {
   const [usersCount, setUsersCount] = useState(0);
   const [categoriesCount, setCategoriesCount] = useState(0);
   const [itemsCount, setItemsCount] = useState(0);
-  const [outOfStockCount, setOutOfStockCount] = useState(0);
+  const [lowStockCount, setLowStockCount] = useState(0);
   const [recentItems, setRecentItems] = useState([]);
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -33,8 +33,10 @@ const Dashboard = () => {
         setUsersCount(usersResponse.data.length);
         setCategoriesCount(categoriesResponse.data.length);
         setItemsCount(itemsResponse.data.length);
-        setOutOfStockCount(
-          itemsResponse.data.filter((item) => item.quantity === 0).length
+        setLowStockCount(
+          itemsResponse.data.filter(
+            (item) => item.quantity <= item.reorderLevel
+          ).length
         );
         setRecentItems(itemsResponse.data.slice(0, 5)); // Get the 5 most recent items
       } catch (error) {
@@ -113,7 +115,7 @@ const Dashboard = () => {
         </div>
         <div className="bg-red-500 p-6 rounded shadow-md text-white">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-bold">Out of Stock</h3>
+            <h3 className="text-lg font-bold">Low Stock</h3>
             <svg
               className="w-8 h-8"
               fill="none"
@@ -129,7 +131,7 @@ const Dashboard = () => {
               />
             </svg>
           </div>
-          <p className="text-2xl">{outOfStockCount}</p>
+          <p className="text-2xl">{lowStockCount}</p>
         </div>
       </div>
 
