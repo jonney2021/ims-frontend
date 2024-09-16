@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createItem,
   deleteItem,
+  getItemByCode,
   getItems,
 } from "../../../services/itemService";
 import { toast } from "react-toastify";
@@ -42,6 +43,19 @@ export const deleteItemAsync = createAsyncThunk(
   async (itemId, { rejectWithValue }) => {
     try {
       const response = await deleteItem(itemId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Get a single item
+export const getItemAsync = createAsyncThunk(
+  "items/getItem",
+  async (itemCode, { rejectWithValue }) => {
+    try {
+      const response = await getItemByCode(itemCode);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -112,6 +126,20 @@ const itemSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
+      })
+      .addCase(getItemAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getItemAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.item = action.payload;
+      })
+      .addCase(getItemAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
       });
   },
 });
@@ -119,4 +147,5 @@ const itemSlice = createSlice({
 export const { reset } = itemSlice.actions;
 export const selectIsLoading = (state) => state.item.isLoading;
 export const selectAllItems = (state) => state.item.items;
+export const selectCurrentItem = (state) => state.item.item;
 export default itemSlice.reducer;

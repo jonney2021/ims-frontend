@@ -17,9 +17,11 @@ import Search from "./Search";
 import { FaEye, FaEdit, FaTrash, FaSort } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { useNavigate } from "react-router-dom";
 
 const ItemList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const items = useSelector(selectAllItems);
   const filteredItems = useSelector(selectFilteredItems);
   const isLoading = useSelector(selectIsLoading);
@@ -105,6 +107,10 @@ const ItemList = () => {
     });
   };
 
+  const handleViewItem = (itemCode) => {
+    navigate(`/item-detail/${itemCode}`);
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -156,7 +162,10 @@ const ItemList = () => {
                     <td className="py-2 px-3 sm:py-3 sm:px-6 text-center">
                       <div className="flex items-center justify-center space-x-2">
                         <button className="w-5 h-5 transform hover:scale-110 text-blue-500 hover:text-blue-700">
-                          <FaEye size={16} />
+                          <FaEye
+                            size={16}
+                            onClick={() => handleViewItem(item.itemCode)}
+                          />
                         </button>
                         <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
                           <FaEdit size={16} />
