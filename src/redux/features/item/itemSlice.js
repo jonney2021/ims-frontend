@@ -4,6 +4,7 @@ import {
   deleteItem,
   getItemByCode,
   getItems,
+  updateItem,
 } from "../../../services/itemService";
 import { toast } from "react-toastify";
 
@@ -56,6 +57,19 @@ export const getItemAsync = createAsyncThunk(
   async (itemCode, { rejectWithValue }) => {
     try {
       const response = await getItemByCode(itemCode);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Update an item
+export const updateItemAsync = createAsyncThunk(
+  "items/updateItem",
+  async ({ itemId, itemData }, { rejectWithValue }) => {
+    try {
+      const response = await updateItem(itemId, itemData);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -136,6 +150,22 @@ const itemSlice = createSlice({
         state.item = action.payload;
       })
       .addCase(getItemAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+      .addCase(updateItemAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateItemAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.item = action.payload;
+        state.message = "Item updated successfully";
+        toast.success("Item updated successfully");
+      })
+      .addCase(updateItemAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

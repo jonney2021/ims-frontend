@@ -2,7 +2,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const ItemForm = ({
-  item,
+  item = {},
+  // item,
   //   itemPhoto,
   itemPhotoPreview,
   description,
@@ -12,7 +13,14 @@ const ItemForm = ({
   saveItem,
   categories,
 }) => {
-  const { name, category, itemCode, quantity, reorderLevel } = item;
+  const {
+    name = "",
+    category = "",
+    itemCode = "",
+    quantity = "",
+    reorderLevel = "",
+  } = item || {};
+  // const { name, category, itemCode, quantity, reorderLevel } = item;
 
   return (
     <form
@@ -48,7 +56,8 @@ const ItemForm = ({
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="category"
           name="category"
-          value={category}
+          // value={category}
+          value={category || ""}
           onChange={handleInputChange}
           required
         >

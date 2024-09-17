@@ -111,6 +111,10 @@ const ItemList = () => {
     navigate(`/item-detail/${itemCode}`);
   };
 
+  const handleEditItem = (id) => {
+    navigate(`/edit-item/${id}`);
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -168,7 +172,10 @@ const ItemList = () => {
                           />
                         </button>
                         <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
-                          <FaEdit size={16} />
+                          <FaEdit
+                            size={16}
+                            onClick={() => handleEditItem(item._id)}
+                          />
                         </button>
                         <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
                           <FaTrash

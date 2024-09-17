@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AddItem from "./pages/AddItem";
 import ItemListPage from "./pages/ItemListPage";
 import ItemDetailPage from "./pages/ItemDetailPage";
+import EditItem from "./pages/EditItem";
 
 axios.defaults.withCredentials = true;
 
@@ -44,6 +45,7 @@ function App() {
                   path="/item-detail/:itemcode"
                   element={<ItemDetailPage />}
                 />
+                <Route path="/edit-item/:id" element={<EditItem />} />
               </Routes>
             </Layout>
           }

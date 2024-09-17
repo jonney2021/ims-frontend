@@ -3,7 +3,7 @@ import ItemDetail from "../components/ItemDetail";
 const ItemDetailPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Item Details</h1>
+      <h1 className="text-3xl font-bold mb-6">Item Detail</h1>
       <ItemDetail />
     </div>
   );
