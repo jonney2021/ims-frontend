@@ -79,6 +79,33 @@ export const deleteItem = async (itemId) => {
   }
 };
 
+// Get an item by ID
+export const getItemById = async (itemId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/items/${itemId}`);
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    } else {
+      throw new Error("Unexpected response from server");
+    }
+  } catch (error) {
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || "Failed to fetch item by ID"
+      );
+    } else if (error.request) {
+      throw new Error(
+        "No response received from server. Please try again later."
+      );
+    } else {
+      throw new Error(
+        `An error occurred. Please try again later. (${error.message})`
+      );
+    }
+  }
+};
+
 // Get an item by code
 export const getItemByCode = async (itemCode) => {
   try {

@@ -1,4 +1,4 @@
-import ReactQuill from "react-quill";
+// import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const ItemForm = ({
@@ -57,7 +57,7 @@ const ItemForm = ({
           id="category"
           name="category"
           // value={category}
-          value={category || ""}
+          value={category}
           onChange={handleInputChange}
           required
         >
@@ -133,12 +133,22 @@ const ItemForm = ({
         >
           Description
         </label>
-        <ReactQuill
+        {/* <ReactQuill
           theme="snow"
           value={description}
           onChange={setDescription}
           placeholder="Item description"
           className="bg-white"
+        /> */}
+        <textarea
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="description"
+          name="description"
+          rows="4"
+          placeholder="Item description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
         />
       </div>
       <div className="mb-4">

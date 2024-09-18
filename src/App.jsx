@@ -37,16 +37,18 @@ function App() {
           path="/*"
           element={
             <Layout>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/items/add-item" element={<AddItem />} />
-                <Route path="/items" element={<ItemListPage />} />
-                <Route
-                  path="/item-detail/:itemcode"
-                  element={<ItemDetailPage />}
-                />
-                <Route path="/edit-item/:id" element={<EditItem />} />
-              </Routes>
+              <div className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/items/add-item" element={<AddItem />} />
+                  <Route path="/items" element={<ItemListPage />} />
+                  <Route
+                    path="/item-detail/:itemcode"
+                    element={<ItemDetailPage />}
+                  />
+                  <Route path="/edit-item/:id" element={<EditItem />} />
+                </Routes>
+              </div>
             </Layout>
           }
         />

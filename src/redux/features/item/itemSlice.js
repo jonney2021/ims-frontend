@@ -3,6 +3,7 @@ import {
   createItem,
   deleteItem,
   getItemByCode,
+  getItemById,
   getItems,
   updateItem,
 } from "../../../services/itemService";
@@ -51,7 +52,20 @@ export const deleteItemAsync = createAsyncThunk(
   }
 );
 
-// Get a single item
+// Get a single item by ID
+export const getItemByIdAsync = createAsyncThunk(
+  "items/getItemById",
+  async (itemId, { rejectWithValue }) => {
+    try {
+      const response = await getItemById(itemId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Get a single item by item code
 export const getItemAsync = createAsyncThunk(
   "items/getItem",
   async (itemCode, { rejectWithValue }) => {
@@ -166,6 +180,20 @@ const itemSlice = createSlice({
         toast.success("Item updated successfully");
       })
       .addCase(updateItemAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+      .addCase(getItemByIdAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getItemByIdAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.item = action.payload;
+      })
+      .addCase(getItemByIdAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

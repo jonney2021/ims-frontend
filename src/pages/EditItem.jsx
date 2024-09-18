@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  getItemAsync,
-  getItemsAsync,
+  getItemByIdAsync,
+  // getItemsAsync,
   selectCurrentItem,
   selectIsLoading,
   updateItemAsync,
@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { getCategoriesAsync } from "../redux/features/category/categorySlice";
 import ItemForm from "../components/ItemForm";
 import Loader from "../components/Loader";
+import { toast } from "react-toastify";
 
 const EditItem = () => {
   const { id } = useParams();
@@ -29,33 +30,32 @@ const EditItem = () => {
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    if (!itemEdit || itemEdit._id !== id) {
-      dispatch(getItemAsync(id));
-    } else {
-      setItem(itemEdit);
-      setDescription(itemEdit.description);
-    }
-  }, [dispatch, id, itemEdit]);
+    const fetchItem = async () => {
+      try {
+        await dispatch(getItemByIdAsync(id)).unwrap();
+        dispatch(getCategoriesAsync());
+      } catch (error) {
+        console.error("Failed to fetch item:", error);
+        toast.error(
+          "Failed to fetch item. It may not exist or has been deleted."
+        );
+        navigate("/items"); // Redirect to items list
+      }
+    };
+
+    fetchItem();
+  }, [dispatch, id, navigate]);
 
   useEffect(() => {
-    dispatch(getCategoriesAsync());
-  }, [dispatch]);
-
-  useEffect(() => {
-    setItem(itemEdit);
-
-    if (item.photo) {
-      setItemPhotoPreview(item.photo);
-    } else {
-      setItemPhotoPreview("");
+    if (itemEdit) {
+      setItem({
+        ...itemEdit,
+        category: itemEdit.category?._id || "",
+      });
+      setDescription(itemEdit.description || "");
+      setItemPhotoPreview(itemEdit.photo || "");
     }
-
-    if (item.description) {
-      setDescription(item.description);
-    } else {
-      setDescription("");
-    }
-  }, [itemEdit, item]);
+  }, [itemEdit]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,19 +69,35 @@ const EditItem = () => {
   };
 
   const resetForm = () => {
-    setItem(itemEdit);
-    setDescription(itemEdit.description);
-    setItemPhoto("");
-    setItemPhotoPreview(itemEdit.photo);
+    if (itemEdit) {
+      setItem({
+        ...itemEdit,
+        category: itemEdit.category?._id || "",
+      });
+      setDescription(itemEdit.description || "");
+      setItemPhoto("");
+      setItemPhotoPreview(itemEdit.photo || "");
+    }
   };
 
   const updateItem = async (e) => {
     e.preventDefault();
+    if (!item) return;
     const formData = new FormData();
+    // for (const key in item) {
+    //   formData.append(key, item[key]);
+    // }
+    // formData.append("description", description);
+
+    // Append all item properties except description
     for (const key in item) {
-      formData.append(key, item[key]);
+      if (key !== "description") {
+        formData.append(key, item[key]);
+      }
     }
-    formData.append("description", description);
+
+    // Handle description separately
+    formData.append("description", description || "");
     if (itemPhoto) {
       formData.append("photo", itemPhoto); // Append the new photo if selected
     }
@@ -90,14 +106,19 @@ const EditItem = () => {
       await dispatch(
         updateItemAsync({ itemId: id, itemData: formData })
       ).unwrap();
+      // Refetch the item to get the updated data
+      await dispatch(getItemByIdAsync(id)).unwrap();
       resetForm();
-      // Refresh the list of items
-      await dispatch(getItemsAsync());
-      navigate("/");
+      navigate("/items");
     } catch (error) {
       console.error("Failed to update item:", error);
+      toast.error("Failed to update item. Please try again.");
     }
   };
+
+  if (!item) {
+    return <div>Loading item...</div>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
@@ -105,15 +126,7 @@ const EditItem = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
         Edit Item
       </h1>
-      {/* {itemPhotoPreview && (
-        <div className="mb-6">
-          <img
-            src={itemPhotoPreview}
-            alt="Item Preview"
-            className="w-full h-auto rounded-lg"
-          />
-        </div>
-      )} */}
+
       <ItemForm
         item={item}
         itemPhotoPreview={itemPhotoPreview}
