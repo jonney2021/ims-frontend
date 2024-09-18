@@ -88,3 +88,32 @@ export const fetchCategory = async (categoryId) => {
     }
   }
 };
+
+// Delete a category
+export const deleteCategory = async (categoryId) => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/api/categories/${categoryId}`
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Unexpected response from server");
+    }
+  } catch (error) {
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || "Failed to delete category"
+      );
+    } else if (error.request) {
+      throw new Error(
+        "No response received from server. Please try again later."
+      );
+    } else {
+      throw new Error(
+        `An error occurred. Please try again later. (${error.message})`
+      );
+    }
+  }
+};

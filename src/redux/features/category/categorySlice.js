@@ -3,6 +3,7 @@ import {
   createCategory,
   fetchCategories,
   fetchCategory,
+  deleteCategory,
 } from "../../../services/categoryService";
 
 const initialState = {
@@ -52,6 +53,19 @@ export const getCategoryByIdAsync = createAsyncThunk(
   }
 );
 
+// Delete a category
+export const deleteCategoryAsync = createAsyncThunk(
+  "category/deleteCategory",
+  async (id, thunkAPI) => {
+    try {
+      await deleteCategory(id);
+      return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
 const categorySlice = createSlice({
   name: "category",
   initialState,
@@ -93,9 +107,26 @@ const categorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(deleteCategoryAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteCategoryAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.categories = state.categories.filter(
+          (category) => category._id !== action.payload
+        );
+      })
+      .addCase(deleteCategoryAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });
 
+// Selectors
+export const selectAllCategories = (state) => state.category.categories;
+export const selectIsLoading = (state) => state.category.isLoading;
+
 export default categorySlice.reducer;
-// export const {} = categorySlice.actions;

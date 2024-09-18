@@ -17,6 +17,7 @@ import AddItem from "./pages/AddItem";
 import ItemListPage from "./pages/ItemListPage";
 import ItemDetailPage from "./pages/ItemDetailPage";
 import EditItem from "./pages/EditItem";
+import CategoryListPage from "./pages/CategoryListPage";
 
 axios.defaults.withCredentials = true;
 
@@ -40,6 +41,7 @@ function App() {
               <div className="flex-grow">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
+                  <Route path="/categories" element={<CategoryListPage />} />
                   <Route path="/items/add-item" element={<AddItem />} />
                   <Route path="/items" element={<ItemListPage />} />
                   <Route
