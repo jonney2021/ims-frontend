@@ -135,5 +135,6 @@ const categorySlice = createSlice({
 // Selectors
 export const selectAllCategories = (state) => state.category.categories;
 export const selectIsLoading = (state) => state.category.isLoading;
+export const selectCurrentCategory = (state) => state.category.category;
 
 export default categorySlice.reducer;
