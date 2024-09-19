@@ -20,6 +20,7 @@ import EditItem from "./pages/EditItem";
 import CategoryListPage from "./pages/CategoryListPage";
 import AddCategory from "./pages/AddCategory";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
+import EditCategory from "./pages/EditCategory";
 
 axios.defaults.withCredentials = true;
 
@@ -52,6 +53,7 @@ function App() {
                     path="/category-detail/:id"
                     element={<CategoryDetailPage />}
                   />
+                  <Route path="/edit-category/:id" element={<EditCategory />} />
                   <Route path="/items/add-item" element={<AddItem />} />
                   <Route path="/items" element={<ItemListPage />} />
                   <Route

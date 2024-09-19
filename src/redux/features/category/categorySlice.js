@@ -4,6 +4,7 @@ import {
   fetchCategories,
   fetchCategory,
   deleteCategory,
+  updateCategory,
 } from "../../../services/categoryService";
 import { toast } from "react-toastify";
 
@@ -54,13 +55,26 @@ export const getCategoryByIdAsync = createAsyncThunk(
   }
 );
 
+// Update a category
+export const updateCategoryAsync = createAsyncThunk(
+  "category/updateCategory",
+  async ({ id, categoryData }, thunkAPI) => {
+    try {
+      const category = await updateCategory(id, categoryData);
+      return category;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
 // Delete a category
 export const deleteCategoryAsync = createAsyncThunk(
   "category/deleteCategory",
   async (id, thunkAPI) => {
     try {
-      await deleteCategory(id);
-      return id;
+      const response = await deleteCategory(id);
+      return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -111,6 +125,20 @@ const categorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(updateCategoryAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateCategoryAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.category = action.payload;
+        toast.success("Category updated successfully");
+      })
+      .addCase(updateCategoryAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
       })
       .addCase(deleteCategoryAsync.pending, (state) => {
         state.isLoading = true;
