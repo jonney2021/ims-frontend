@@ -6,6 +6,7 @@ import {
   selectAllUsers,
   selectIsLoading,
 } from "../redux/features/user/userSlice";
+import { selectSearchTerm } from "../redux/features/item/filterSlice";
 import ReactPaginate from "react-paginate";
 import Loader from "./Loader";
 import Search from "./Search";
@@ -19,7 +20,7 @@ const UserList = () => {
   const navigate = useNavigate();
   const users = useSelector(selectAllUsers);
   const isLoading = useSelector(selectIsLoading);
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchTerm = useSelector(selectSearchTerm);
   const [currentPage, setCurrentPage] = useState(0);
   const [usersPerPage] = useState(5);
   const [sortConfig, setSortConfig] = useState({
@@ -31,13 +32,16 @@ const UserList = () => {
     dispatch(getAllUsersAsync());
   }, [dispatch]);
 
-  // Sorting and filtering
+  // Sorting and Filtering
   const sortedAndFilteredUsers = useMemo(() => {
-    let filteredUsers = users.filter(
-      (user) =>
-        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    let filteredUsers = users.filter((user) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        user.username.toLowerCase().includes(searchLower) ||
+        user.email.toLowerCase().includes(searchLower) ||
+        user.role.toLowerCase().includes(searchLower)
+      );
+    });
 
     if (sortConfig.key !== null) {
       filteredUsers.sort((a, b) => {
@@ -60,6 +64,10 @@ const UserList = () => {
     offset,
     offset + usersPerPage
   );
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [searchTerm]);
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected);
@@ -108,11 +116,7 @@ const UserList = () => {
 
   return (
     <div className="w-full">
-      <Search
-        placeholder="Search users..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <Search placeholder="Search users..." />
       {sortedAndFilteredUsers.length === 0 ? (
         <div className="text-center py-4 text-gray-500">No users found.</div>
       ) : (
