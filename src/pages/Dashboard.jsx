@@ -173,10 +173,12 @@ const Dashboard = () => {
           Add New Category
         </Link>
         <Link
-          to="/reports"
+          // to="/reports"
+          to="/users/add-user"
           className="bg-purple-500 text-white p-4 rounded shadow-md text-center"
         >
-          Generate Report
+          {/* Generate Report */}
+          Add New User
         </Link>
       </div>
     </div>
