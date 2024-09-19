@@ -167,7 +167,7 @@ const Dashboard = () => {
           Add New Item
         </Link>
         <Link
-          to="/categories/add"
+          to="/categories/add-category"
           className="bg-green-500 text-white p-4 rounded shadow-md text-center"
         >
           Add New Category

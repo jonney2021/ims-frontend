@@ -18,6 +18,7 @@ import ItemListPage from "./pages/ItemListPage";
 import ItemDetailPage from "./pages/ItemDetailPage";
 import EditItem from "./pages/EditItem";
 import CategoryListPage from "./pages/CategoryListPage";
+import AddCategory from "./pages/AddCategory";
 
 axios.defaults.withCredentials = true;
 
@@ -42,6 +43,10 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/categories" element={<CategoryListPage />} />
+                  <Route
+                    path="/categories/add-category"
+                    element={<AddCategory />}
+                  />
                   <Route path="/items/add-item" element={<AddItem />} />
                   <Route path="/items" element={<ItemListPage />} />
                   <Route

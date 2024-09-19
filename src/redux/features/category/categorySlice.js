@@ -5,6 +5,7 @@ import {
   fetchCategory,
   deleteCategory,
 } from "../../../services/categoryService";
+import { toast } from "react-toastify";
 
 const initialState = {
   categories: [],
@@ -78,11 +79,13 @@ const categorySlice = createSlice({
       .addCase(createCategoryAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         state.categories.push(action.payload);
+        toast.success("Category created successfully");
       })
       .addCase(createCategoryAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        toast.error(action.payload);
       })
       .addCase(getCategoriesAsync.pending, (state) => {
         state.isLoading = true;
@@ -95,6 +98,7 @@ const categorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        toast.error(action.payload);
       })
       .addCase(getCategoryByIdAsync.pending, (state) => {
         state.isLoading = true;
@@ -116,11 +120,14 @@ const categorySlice = createSlice({
         state.categories = state.categories.filter(
           (category) => category._id !== action.payload
         );
+        state.message = action.payload.message;
+        toast.success(action.payload.message);
       })
       .addCase(deleteCategoryAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+        toast.error(action.payload);
       });
   },
 });
