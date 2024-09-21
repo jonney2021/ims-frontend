@@ -75,7 +75,7 @@ const Dashboard = () => {
         </div>
         <div className="bg-green-500 p-6 rounded shadow-md text-white">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-bold">Category</h3>
+            <h3 className="text-lg font-bold">Categories</h3>
             <svg
               className="w-8 h-8"
               fill="none"
