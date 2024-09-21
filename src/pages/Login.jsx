@@ -39,8 +39,10 @@ const Login = () => {
       // Dispatch the credentials to the Redux store
       dispatch(
         setCredentials({
-          isAuthenticated: true,
+          // isAuthenticated: true,
           username: userData.username,
+          role: userData.role,
+          photo: userData.photo,
         })
       );
 

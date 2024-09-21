@@ -12,7 +12,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { username } = useSelector((state) => state.auth);
+  const { username, role, photo } = useSelector((state) => state.auth); // Add role here
 
   // Update the date and time every second
   useEffect(() => {
@@ -59,7 +59,13 @@ const Header = () => {
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
         >
-          Welcome, <span className="font-bold">{username}</span>
+          <img
+            src={photo || "https://i.ibb.co/4pDNDk1/avatar.png"}
+            alt="User avatar"
+            className="w-8 h-8 rounded-full object-cover"
+          />
+          <span className="font-bold">{username}</span>
+          <span className="text-sm text-gray-500">({role})</span>
           <svg
             className="w-4 h-4"
             fill="none"

@@ -26,12 +26,15 @@ const ItemList = () => {
   const filteredItems = useSelector(selectFilteredItems);
   const isLoading = useSelector(selectIsLoading);
   const searchTerm = useSelector(selectSearchTerm);
+  const userRole = useSelector((state) => state.auth.role); // Get user role from auth state
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(5);
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
   });
+
+  const isAdmin = userRole === "Admin"; // Check if user is admin
 
   useEffect(() => {
     dispatch(getItemsAsync());
@@ -85,6 +88,10 @@ const ItemList = () => {
   };
 
   const delItem = async (id) => {
+    if (!isAdmin) {
+      alert("You don't have permission to delete items.");
+      return;
+    }
     console.log("Deleting item with id: ", id);
     await dispatch(deleteItemAsync(id));
     // Refetch items
@@ -92,6 +99,10 @@ const ItemList = () => {
   };
 
   const confirmDelete = (id, name) => {
+    if (!isAdmin) {
+      alert("You don't have permission to delete items.");
+      return;
+    }
     confirmAlert({
       title: "Confirm to delete",
       message: `Are you sure you want to delete the item ${name}?`,
@@ -177,12 +188,14 @@ const ItemList = () => {
                             onClick={() => handleEditItem(item._id)}
                           />
                         </button>
-                        <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
-                          <FaTrash
-                            size={16}
-                            onClick={() => confirmDelete(item._id, item.name)}
-                          />
-                        </button>
+                        {isAdmin && ( // Only show delete button for admin users
+                          <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
+                            <FaTrash
+                              size={16}
+                              onClick={() => confirmDelete(item._id, item.name)}
+                            />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

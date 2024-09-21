@@ -153,3 +153,27 @@ export const resetPassword = async (password, confirmPassword, resetToken) => {
     }
   }
 };
+
+// Function to check login status
+export const checkLoginStatus = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/users/loggedin`, {
+      withCredentials: true,
+    });
+
+    if (response.data) {
+      // If logged in, fetch user profile
+      const profileResponse = await axios.get(
+        `${API_BASE_URL}/api/users/profile`,
+        {
+          withCredentials: true,
+        }
+      );
+      return profileResponse.data;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error checking login status:", error);
+    return null;
+  }
+};
