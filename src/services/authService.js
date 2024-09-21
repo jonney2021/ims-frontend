@@ -24,6 +24,7 @@ export const loginUser = async (email, password) => {
 
     // Check if the response was successful
     if (response.status === 200 && response.data) {
+      // console.log("Login response:", response.data);
       return response.data;
     } else {
       throw new Error("Unexpected response from server");
@@ -179,16 +180,43 @@ export const getUserProfile = async () => {
       withCredentials: true,
     });
 
+    console.log("API response:", response.data);
+
     if (response.status === 200 && response.data) {
       return response.data;
     } else {
       throw new Error("Unexpected response from server");
     }
   } catch (error) {
-    // Re-throw the error to be caught in the component
+    console.error("Error in getUserProfile:", error);
+    throw error;
+  }
+};
+
+// Function to update user profile
+export const updateProfile = async (formData) => {
+  try {
+    const response = await axios.patch(
+      `${API_BASE_URL}/api/users/updateprofile`,
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (response.status === 200 && response.data) {
+      // console.log("API response:", response.data);
+      return response.data;
+    } else {
+      throw new Error("Unexpected response from server");
+    }
+  } catch (error) {
     if (error.response) {
       throw new Error(
-        error.response.data.message || "Error occurred while fetching profile."
+        error.response.data.message || "Error occurred while updating profile."
       );
     } else if (error.request) {
       throw new Error(
