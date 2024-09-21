@@ -21,12 +21,15 @@ const UserList = () => {
   const users = useSelector(selectAllUsers);
   const isLoading = useSelector(selectIsLoading);
   const searchTerm = useSelector(selectSearchTerm);
+  const userRole = useSelector((state) => state.auth.role); // Get user role from auth state
   const [currentPage, setCurrentPage] = useState(0);
   const [usersPerPage] = useState(5);
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
   });
+
+  const isAdmin = userRole === "Admin"; // Check if user is admin
 
   useEffect(() => {
     dispatch(getAllUsersAsync());
@@ -82,11 +85,19 @@ const UserList = () => {
   };
 
   const delUser = async (id) => {
+    if (!isAdmin) {
+      alert("You don't have permission to delete users.");
+      return;
+    }
     await dispatch(deleteUserAsync(id));
     dispatch(getAllUsersAsync());
   };
 
   const confirmDelete = (id, username) => {
+    if (!isAdmin) {
+      alert("You don't have permission to delete users.");
+      return;
+    }
     confirmAlert({
       title: "Confirm to delete",
       message: `Are you sure you want to delete the user ${username}?`,
@@ -105,10 +116,6 @@ const UserList = () => {
   const handleViewUser = (id) => {
     navigate(`/user-detail/${id}`);
   };
-
-  // const handleEditUser = (id) => {
-  //   navigate(`/edit-user/${id}`);
-  // };
 
   const handleEditUser = (id) => {
     navigate(`/edit-user/${id}`);
@@ -167,21 +174,25 @@ const UserList = () => {
                             onClick={() => handleViewUser(user._id)}
                           />
                         </button>
-                        <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
-                          <FaEdit
-                            size={16}
-                            // onClick={() => handleEditUser(user._id)}
-                            onClick={() => handleEditUser(user._id)}
-                          />
-                        </button>
-                        <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
-                          <FaTrash
-                            size={16}
-                            onClick={() =>
-                              confirmDelete(user._id, user.username)
-                            }
-                          />
-                        </button>
+                        {isAdmin && (
+                          <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
+                            <FaEdit
+                              size={16}
+                              onClick={() => handleEditUser(user._id)}
+                            />
+                          </button>
+                        )}
+
+                        {isAdmin && (
+                          <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
+                            <FaTrash
+                              size={16}
+                              onClick={() =>
+                                confirmDelete(user._id, user.username)
+                              }
+                            />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

@@ -182,13 +182,16 @@ const ItemList = () => {
                             onClick={() => handleViewItem(item.itemCode)}
                           />
                         </button>
-                        <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
-                          <FaEdit
-                            size={16}
-                            onClick={() => handleEditItem(item._id)}
-                          />
-                        </button>
-                        {isAdmin && ( // Only show delete button for admin users
+                        {isAdmin && (
+                          <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
+                            <FaEdit
+                              size={16}
+                              onClick={() => handleEditItem(item._id)}
+                            />
+                          </button>
+                        )}
+
+                        {isAdmin && (
                           <button className="w-5 h-5 transform hover:scale-110 text-red-500 hover:text-red-700">
                             <FaTrash
                               size={16}

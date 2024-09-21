@@ -37,14 +37,18 @@ const Login = () => {
       const userData = await loginUser(email, password);
 
       // Dispatch the credentials to the Redux store
-      dispatch(
-        setCredentials({
-          // isAuthenticated: true,
-          username: userData.username,
-          role: userData.role,
-          photo: userData.photo,
-        })
-      );
+      // dispatch(
+      //   setCredentials({
+      //     isAuthenticated: true,
+      //     username: userData.username,
+      //     role: userData.role,
+      //     photo: userData.photo,
+      //   })
+      // );
+
+      console.log("Login successful. User data:", userData);
+
+      dispatch(setCredentials(userData));
 
       toast.success("Login successful");
       navigate("/");

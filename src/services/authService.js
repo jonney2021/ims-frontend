@@ -15,7 +15,7 @@ export const loginUser = async (email, password) => {
       `${API_BASE_URL}/api/users/login`,
       { email, password },
       {
-        // withCredentials: true,
+        withCredentials: true,
         headers: {
           "Content-Type": "application/json",
         },
@@ -161,15 +161,20 @@ export const checkLoginStatus = async () => {
       withCredentials: true,
     });
 
-    if (response.data) {
-      // If logged in, fetch user profile
-      const profileResponse = await axios.get(
-        `${API_BASE_URL}/api/users/profile`,
-        {
-          withCredentials: true,
-        }
-      );
-      return profileResponse.data;
+    // if (response.data) {
+    //   // If logged in, fetch user profile
+    //   const profileResponse = await axios.get(
+    //     `${API_BASE_URL}/api/users/profile`,
+    //     {
+    //       withCredentials: true,
+    //     }
+    //   );
+    //   return profileResponse.data;
+    // }
+    // return null;
+    console.log("Login status response:", response.data);
+    if (response.data && response.data.isLoggedIn) {
+      return response.data.user;
     }
     return null;
   } catch (error) {

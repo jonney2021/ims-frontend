@@ -25,6 +25,7 @@ import Register from "./pages/Register";
 import UserListPage from "./pages/UserListPage";
 import UserDetailPage from "./pages/UserDetailPage";
 import EditUser from "./pages/EditUser";
+import AuthWrapper from "./components/AuthWrapper";
 
 axios.defaults.withCredentials = true;
 
@@ -32,50 +33,58 @@ function App() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <Router>
-      <ToastContainer />
-      <Routes>
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <Login />}
-        />
-        <Route path="/forgot" element={<Forgot />} />
-        <Route path="/resetpassword/:resetToken" element={<Reset />} />
-        <Route
-          path="/*"
-          element={
-            <Layout>
-              <div className="flex-grow">
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/categories" element={<CategoryListPage />} />
-                  <Route
-                    path="/categories/add-category"
-                    element={<AddCategory />}
-                  />
-                  <Route
-                    path="/category-detail/:id"
-                    element={<CategoryDetailPage />}
-                  />
-                  <Route path="/edit-category/:id" element={<EditCategory />} />
-                  <Route path="/items/add-item" element={<AddItem />} />
-                  <Route path="/items" element={<ItemListPage />} />
-                  <Route
-                    path="/item-detail/:itemcode"
-                    element={<ItemDetailPage />}
-                  />
-                  <Route path="/edit-item/:id" element={<EditItem />} />
-                  <Route path="/users" element={<UserListPage />} />
-                  <Route path="/users/add-user" element={<Register />} />
-                  <Route path="/user-detail/:id" element={<UserDetailPage />} />
-                  <Route path="/edit-user/:id" element={<EditUser />} />
-                </Routes>
-              </div>
-            </Layout>
-          }
-        />
-      </Routes>
-    </Router>
+    <AuthWrapper>
+      <Router>
+        <ToastContainer />
+        <Routes>
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+          />
+          <Route path="/forgot" element={<Forgot />} />
+          <Route path="/resetpassword/:resetToken" element={<Reset />} />
+          <Route
+            path="/*"
+            element={
+              <Layout>
+                <div className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/categories" element={<CategoryListPage />} />
+                    <Route
+                      path="/categories/add-category"
+                      element={<AddCategory />}
+                    />
+                    <Route
+                      path="/category-detail/:id"
+                      element={<CategoryDetailPage />}
+                    />
+                    <Route
+                      path="/edit-category/:id"
+                      element={<EditCategory />}
+                    />
+                    <Route path="/items/add-item" element={<AddItem />} />
+                    <Route path="/items" element={<ItemListPage />} />
+                    <Route
+                      path="/item-detail/:itemcode"
+                      element={<ItemDetailPage />}
+                    />
+                    <Route path="/edit-item/:id" element={<EditItem />} />
+                    <Route path="/users" element={<UserListPage />} />
+                    <Route path="/users/add-user" element={<Register />} />
+                    <Route
+                      path="/user-detail/:id"
+                      element={<UserDetailPage />}
+                    />
+                    <Route path="/edit-user/:id" element={<EditUser />} />
+                  </Routes>
+                </div>
+              </Layout>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthWrapper>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux"; // Add this import
 
 const Dashboard = () => {
   const [usersCount, setUsersCount] = useState(0);
@@ -10,6 +11,8 @@ const Dashboard = () => {
   const [recentItems, setRecentItems] = useState([]);
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const userRole = useSelector((state) => state.auth.role); // Get user role from Redux store
+  const isAdmin = userRole === "Admin"; // Check if user is admin
 
   useEffect(() => {
     // Fetch counts from backend
@@ -159,28 +162,28 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        <Link
-          to="/items/add-item"
-          className="bg-blue-500 text-white p-4 rounded shadow-md text-center"
-        >
-          Add New Item
-        </Link>
-        <Link
-          to="/categories/add-category"
-          className="bg-green-500 text-white p-4 rounded shadow-md text-center"
-        >
-          Add New Category
-        </Link>
-        <Link
-          // to="/reports"
-          to="/users/add-user"
-          className="bg-purple-500 text-white p-4 rounded shadow-md text-center"
-        >
-          {/* Generate Report */}
-          Add New User
-        </Link>
-      </div>
+      {isAdmin && ( // Only show Quick Actions for admin users
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+          <Link
+            to="/items/add-item"
+            className="bg-blue-500 text-white p-4 rounded shadow-md text-center"
+          >
+            Add New Item
+          </Link>
+          <Link
+            to="/categories/add-category"
+            className="bg-green-500 text-white p-4 rounded shadow-md text-center"
+          >
+            Add New Category
+          </Link>
+          <Link
+            to="/users/add-user"
+            className="bg-purple-500 text-white p-4 rounded shadow-md text-center"
+          >
+            Add New User
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
