@@ -5,6 +5,7 @@ import {
   getUserByName,
   updateUser,
   deleteUser,
+  getUserById,
 } from "../../../services/userService";
 import { toast } from "react-toastify";
 
@@ -27,6 +28,19 @@ export const getAllUsersAsync = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getAllUsers();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Async thunk for fetching a user by id
+export const getUserByIdAsync = createAsyncThunk(
+  "users/getUserById",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await getUserById(userId);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -119,6 +133,20 @@ const userSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
+      .addCase(getUserByIdAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserByIdAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.user = action.payload;
+      })
+      .addCase(getUserByIdAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
       .addCase(getUserByNameAsync.pending, (state) => {
         state.isLoading = true;
       })
@@ -140,9 +168,9 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.user = action.payload;
-        state.users = state.users.map((user) =>
-          user._id === action.payload._id ? action.payload : user
-        );
+        // state.users = state.users.map((user) =>
+        //   user._id === action.payload._id ? action.payload : user
+        // );
         state.message = "User updated successfully";
         toast.success("User updated successfully");
       })

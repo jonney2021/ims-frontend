@@ -2,21 +2,21 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getUserByNameAsync,
+  getUserByIdAsync,
   selectIsLoading,
   selectCurrentUser,
 } from "../redux/features/user/userSlice";
 import Loader from "./Loader";
 
 const UserDetail = () => {
-  const { username } = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
-    dispatch(getUserByNameAsync(username));
-  }, [dispatch, username]);
+    dispatch(getUserByIdAsync(id));
+  }, [dispatch, id]);
 
   if (isLoading) {
     return <Loader />;

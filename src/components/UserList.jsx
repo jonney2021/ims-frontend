@@ -102,9 +102,13 @@ const UserList = () => {
     });
   };
 
-  const handleViewUser = (username) => {
-    navigate(`/user-detail/${username}`);
+  const handleViewUser = (id) => {
+    navigate(`/user-detail/${id}`);
   };
+
+  // const handleEditUser = (id) => {
+  //   navigate(`/edit-user/${id}`);
+  // };
 
   const handleEditUser = (id) => {
     navigate(`/edit-user/${id}`);
@@ -160,12 +164,13 @@ const UserList = () => {
                         <button className="w-5 h-5 transform hover:scale-110 text-blue-500 hover:text-blue-700">
                           <FaEye
                             size={16}
-                            onClick={() => handleViewUser(user.username)}
+                            onClick={() => handleViewUser(user._id)}
                           />
                         </button>
                         <button className="w-5 h-5 transform hover:scale-110 text-green-500 hover:text-green-700">
                           <FaEdit
                             size={16}
+                            // onClick={() => handleEditUser(user._id)}
                             onClick={() => handleEditUser(user._id)}
                           />
                         </button>
