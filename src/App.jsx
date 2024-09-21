@@ -26,6 +26,7 @@ import UserListPage from "./pages/UserListPage";
 import UserDetailPage from "./pages/UserDetailPage";
 import EditUser from "./pages/EditUser";
 import AuthWrapper from "./components/AuthWrapper";
+import Profile from "./pages/Profile";
 
 axios.defaults.withCredentials = true;
 
@@ -77,6 +78,7 @@ function App() {
                       element={<UserDetailPage />}
                     />
                     <Route path="/edit-user/:id" element={<EditUser />} />
+                    <Route path="/profile" element={<Profile />} />
                   </Routes>
                 </div>
               </Layout>

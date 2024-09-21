@@ -161,18 +161,7 @@ export const checkLoginStatus = async () => {
       withCredentials: true,
     });
 
-    // if (response.data) {
-    //   // If logged in, fetch user profile
-    //   const profileResponse = await axios.get(
-    //     `${API_BASE_URL}/api/users/profile`,
-    //     {
-    //       withCredentials: true,
-    //     }
-    //   );
-    //   return profileResponse.data;
-    // }
-    // return null;
-    console.log("Login status response:", response.data);
+    // console.log("Login status response:", response.data);
     if (response.data && response.data.isLoggedIn) {
       return response.data.user;
     }
@@ -180,5 +169,35 @@ export const checkLoginStatus = async () => {
   } catch (error) {
     console.error("Error checking login status:", error);
     return null;
+  }
+};
+
+// Function to get user profile
+export const getUserProfile = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
+      withCredentials: true,
+    });
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    } else {
+      throw new Error("Unexpected response from server");
+    }
+  } catch (error) {
+    // Re-throw the error to be caught in the component
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || "Error occurred while fetching profile."
+      );
+    } else if (error.request) {
+      throw new Error(
+        "No response received from server. Please try again later."
+      );
+    } else {
+      throw new Error(
+        `An error occurred. Please try again later. (${error.message})`
+      );
+    }
   }
 };
