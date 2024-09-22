@@ -141,13 +141,22 @@ const ItemList = () => {
             <table className="min-w-full bg-white">
               <thead>
                 <tr className="bg-gray-800 text-white uppercase text-xs sm:text-sm leading-normal">
-                  {["name", "itemCode", "quantity", "category"].map((key) => (
+                  {[
+                    "name",
+                    "itemCode",
+                    "quantity",
+                    "reorderLevel",
+                    "category",
+                  ].map((key) => (
                     <th
                       key={key}
                       className="py-2 px-3 sm:py-3 sm:px-6 text-left cursor-pointer hover:bg-gray-700"
                       onClick={() => requestSort(key)}
                     >
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                      {/* {key.charAt(0).toUpperCase() + key.slice(1)} */}
+                      {key === "reorderLevel"
+                        ? "Reorder Level"
+                        : key.charAt(0).toUpperCase() + key.slice(1)}
                       <FaSort className="inline ml-1" />
                     </th>
                   ))}
@@ -176,6 +185,9 @@ const ItemList = () => {
                       }`}
                     >
                       {item.quantity}
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                      {item.reorderLevel}
                     </td>
                     <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
                       {item.category.name}
