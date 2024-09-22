@@ -127,6 +127,7 @@ const EditUser = () => {
         handleInputChange={handleInputChange}
         handlePhotoChange={handlePhotoChange}
         saveUser={updateUser}
+        handleCancel={() => navigate("/users")}
       />
     </div>
   );

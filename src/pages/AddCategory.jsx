@@ -40,6 +40,10 @@ const AddCategory = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigate("/categories");
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       {isLoading && <Loader />}
@@ -50,6 +54,7 @@ const AddCategory = () => {
         category={category}
         handleInputChange={handleInputChange}
         saveCategory={saveCategory}
+        handleCancel={handleCancel}
       />
     </div>
   );

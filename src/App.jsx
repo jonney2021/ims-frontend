@@ -29,6 +29,7 @@ import AuthWrapper from "./components/AuthWrapper";
 import Profile from "./pages/Profile";
 import Contact from "./pages/Contact";
 import ChangePassword from "./components/ChangePassword";
+import LowStock from "./pages/LowStock";
 
 axios.defaults.withCredentials = true;
 
@@ -87,6 +88,7 @@ function App() {
                       path="/changepassword"
                       element={<ChangePassword />}
                     />
+                    <Route path="/items/low-stock" element={<LowStock />} />
                   </Routes>
                   {/* </div> */}
                 </Layout>

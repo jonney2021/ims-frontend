@@ -162,3 +162,24 @@ export const updateItem = async (itemId, itemData) => {
     }
   }
 };
+
+// Get low stock items
+export const getLowStockItems = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/items/low-stock`);
+
+    if (response.status === 200 && Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.status === 200 && response.data.message) {
+      // This handles the case where an error message is returned with a 200 status
+      console.error("Error fetching low stock items:", response.data.message);
+      return [];
+    } else {
+      console.error("Unexpected response:", response);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching low stock items:", error);
+    return [];
+  }
+};

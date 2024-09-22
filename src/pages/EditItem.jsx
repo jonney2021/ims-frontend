@@ -157,6 +157,7 @@ const EditItem = () => {
         handlePhotoChange={handlePhotoChange}
         saveItem={updateItem}
         categories={categories}
+        handleCancel={() => navigate("/items")}
       />
     </div>
   );

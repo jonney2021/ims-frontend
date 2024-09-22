@@ -1,4 +1,9 @@
-const CategoryForm = ({ category = {}, handleInputChange, saveCategory }) => {
+const CategoryForm = ({
+  category = {},
+  handleInputChange,
+  saveCategory,
+  handleCancel,
+}) => {
   const { name = "", description = "" } = category || {};
 
   return (
@@ -42,12 +47,19 @@ const CategoryForm = ({ category = {}, handleInputChange, saveCategory }) => {
           required
         />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-end space-x-4">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
           Save Category
+        </button>
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Cancel
         </button>
       </div>
     </form>

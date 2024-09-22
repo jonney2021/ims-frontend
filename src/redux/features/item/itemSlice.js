@@ -5,6 +5,7 @@ import {
   getItemByCode,
   getItemById,
   getItems,
+  getLowStockItems,
   updateItem,
 } from "../../../services/itemService";
 import { toast } from "react-toastify";
@@ -91,8 +92,22 @@ export const updateItemAsync = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching low stock items
+export const getLowStockItemsAsync = createAsyncThunk(
+  "items/getLowStockItems",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getLowStockItems();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   items: [],
+  lowStockItems: [],
   item: null,
   isLoading: false,
   isError: false,
@@ -198,6 +213,20 @@ const itemSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
+      })
+      .addCase(getLowStockItemsAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getLowStockItemsAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.lowStockItems = action.payload;
+      })
+      .addCase(getLowStockItemsAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
       });
   },
 });
@@ -206,4 +235,5 @@ export const { reset } = itemSlice.actions;
 export const selectIsLoading = (state) => state.item.isLoading;
 export const selectAllItems = (state) => state.item.items;
 export const selectCurrentItem = (state) => state.item.item;
+export const selectLowStockItems = (state) => state.item.lowStockItems;
 export default itemSlice.reducer;

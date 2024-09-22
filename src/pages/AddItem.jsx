@@ -71,6 +71,10 @@ const AddItem = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigate("/");
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       {isLoading && <Loader />}
@@ -85,6 +89,7 @@ const AddItem = () => {
         handleInputChange={handleInputChange}
         handlePhotoChange={handlePhotoChange}
         saveItem={saveItem}
+        handleCancel={handleCancel}
         categories={categories}
       />
     </div>

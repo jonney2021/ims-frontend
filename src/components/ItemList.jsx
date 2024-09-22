@@ -168,7 +168,13 @@ const ItemList = () => {
                     <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
                       {item.itemCode}
                     </td>
-                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                    <td
+                      className={`py-2 px-3 sm:py-3 sm:px-6 text-left ${
+                        item.quantity <= item.reorderLevel
+                          ? "font-bold text-red-500"
+                          : ""
+                      }`}
+                    >
                       {item.quantity}
                     </td>
                     <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">

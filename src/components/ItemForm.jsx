@@ -1,10 +1,5 @@
-// import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
-
 const ItemForm = ({
   item = {},
-  // item,
-  //   itemPhoto,
   itemPhotoPreview,
   description,
   setDescription,
@@ -12,6 +7,7 @@ const ItemForm = ({
   handlePhotoChange,
   saveItem,
   categories,
+  handleCancel,
 }) => {
   const {
     name = "",
@@ -20,7 +16,6 @@ const ItemForm = ({
     quantity = "",
     reorderLevel = "",
   } = item || {};
-  // const { name, category, itemCode, quantity, reorderLevel } = item;
 
   return (
     <form
@@ -175,12 +170,19 @@ const ItemForm = ({
           />
         </div>
       )}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-end space-x-4">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
           Save Item
+        </button>
+        <button
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          onClick={handleCancel}
+        >
+          Cancel
         </button>
       </div>
     </form>

@@ -63,6 +63,10 @@ const Register = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigate("/users");
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       {isLoading && <Loader />}
@@ -74,6 +78,7 @@ const Register = () => {
         handleInputChange={handleInputChange}
         handlePhotoChange={handlePhotoChange}
         saveUser={saveUser}
+        handleCancel={handleCancel}
         photoPreview={photoPreview}
       />
     </div>

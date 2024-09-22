@@ -108,6 +108,7 @@ const EditCategory = () => {
         category={category}
         handleInputChange={handleInputChange}
         saveCategory={updateCategory}
+        handleCancel={() => navigate("/categories")}
       />
     </div>
   );
