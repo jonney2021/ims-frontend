@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -9,15 +11,15 @@ const Footer = () => {
             <p>&copy; {currentYear} IMS All rights reserved.</p>
           </div>
           <div className="flex space-x-4">
-            <a href="#" className="hover:bg-gray-700 px-2 py-1 rounded">
+            <Link to="#" className="hover:bg-gray-700 px-2 py-1 rounded">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:bg-gray-700 px-2 py-1 rounded">
+            </Link>
+            <Link to="#" className="hover:bg-gray-700 px-2 py-1 rounded">
               Terms of Service
-            </a>
-            <a href="#" className="hover:bg-gray-700 px-2 py-1 rounded">
+            </Link>
+            <Link to="/contact" className="hover:bg-gray-700 px-2 py-1 rounded">
               Contact Us
-            </a>
+            </Link>
           </div>
         </div>
       </div>

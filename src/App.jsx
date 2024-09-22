@@ -27,6 +27,7 @@ import UserDetailPage from "./pages/UserDetailPage";
 import EditUser from "./pages/EditUser";
 import AuthWrapper from "./components/AuthWrapper";
 import Profile from "./pages/Profile";
+import Contact from "./pages/Contact";
 
 axios.defaults.withCredentials = true;
 
@@ -47,8 +48,9 @@ function App() {
           <Route
             path="/*"
             element={
-              <Layout>
-                <div className="flex-grow">
+              isAuthenticated ? (
+                <Layout>
+                  {/* <div className="flex-grow"> */}
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/categories" element={<CategoryListPage />} />
@@ -79,9 +81,13 @@ function App() {
                     />
                     <Route path="/edit-user/:id" element={<EditUser />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/contact" element={<Contact />} />
                   </Routes>
-                </div>
-              </Layout>
+                  {/* </div> */}
+                </Layout>
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
         </Routes>
