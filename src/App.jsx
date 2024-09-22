@@ -28,6 +28,7 @@ import EditUser from "./pages/EditUser";
 import AuthWrapper from "./components/AuthWrapper";
 import Profile from "./pages/Profile";
 import Contact from "./pages/Contact";
+import ChangePassword from "./components/ChangePassword";
 
 axios.defaults.withCredentials = true;
 
@@ -82,6 +83,10 @@ function App() {
                     <Route path="/edit-user/:id" element={<EditUser />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/contact" element={<Contact />} />
+                    <Route
+                      path="/changepassword"
+                      element={<ChangePassword />}
+                    />
                   </Routes>
                   {/* </div> */}
                 </Layout>

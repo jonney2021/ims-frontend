@@ -229,3 +229,39 @@ export const updateProfile = async (formData) => {
     }
   }
 };
+
+// Function to change password
+export const changePassword = async (oldPassword, newPassword) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/users/changepassword`,
+      { oldPassword, password: newPassword },
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    } else {
+      throw new Error("Unexpected response from server");
+    }
+  } catch (error) {
+    if (error.response) {
+      throw new Error(
+        error.response.data.message || "Error occurred while changing password."
+      );
+    } else if (error.request) {
+      throw new Error(
+        "No response received from server. Please try again later."
+      );
+    } else {
+      throw new Error(
+        `An error occurred. Please try again later. (${error.message})`
+      );
+    }
+  }
+};

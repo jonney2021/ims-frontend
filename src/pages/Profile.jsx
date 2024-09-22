@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfileAsync } from "../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
+import { Link } from "react-router-dom";
 import {
   FaUser,
   FaEnvelope,
@@ -10,6 +11,7 @@ import {
   FaEdit,
   FaSave,
   FaTimes,
+  FaLock,
 } from "react-icons/fa";
 
 const Profile = () => {
@@ -200,12 +202,20 @@ const Profile = () => {
               <span className="ml-2">{role}</span>
             </p>
           </div>
-          <button
-            onClick={() => setIsEditing(true)}
-            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
-          >
-            <FaEdit className="mr-2" /> Edit Profile
-          </button>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
+            >
+              <FaEdit className="mr-2" /> Edit Profile
+            </button>
+            <Link
+              to="/changepassword"
+              className="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300"
+            >
+              <FaLock className="mr-2" /> Change Password
+            </Link>
+          </div>
         </div>
       )}
     </div>
