@@ -18,6 +18,7 @@ import { FaEye, FaEdit, FaTrash, FaSort } from "react-icons/fa";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useNavigate } from "react-router-dom";
+import { format, isValid } from "date-fns";
 
 const ItemList = () => {
   const dispatch = useDispatch();
@@ -163,6 +164,9 @@ const ItemList = () => {
                   <th className="py-2 px-3 sm:py-3 sm:px-6 text-center">
                     Actions
                   </th>
+                  <th className="py-2 px-3 sm:py-3 sm:px-6 text-left cursor-pointer hover:bg-gray-700">
+                    Low Stock Email
+                  </th>
                 </tr>
               </thead>
               <tbody className="text-gray-600 text-xs sm:text-sm font-medium">
@@ -218,6 +222,21 @@ const ItemList = () => {
                           </button>
                         )}
                       </div>
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                      {item.lowStockEmailSent ? (
+                        <span className="text-yellow-500">
+                          {item.lowStockEmailSentDate &&
+                          isValid(new Date(item.lowStockEmailSentDate))
+                            ? `Sent on ${format(
+                                new Date(item.lowStockEmailSentDate),
+                                "MMM dd, yyyy HH:mm:ss"
+                              )}`
+                            : "Sent (date unknown)"}
+                        </span>
+                      ) : (
+                        <span className="text-green-500">Not needed</span>
+                      )}
                     </td>
                   </tr>
                 ))}
