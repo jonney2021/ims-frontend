@@ -7,7 +7,7 @@ This is the frontend application for the Inventory Management System, built with
 - Dashboard with overview of inventory status
 - Item management (add, edit, delete, view details)
 - Category management
-- User management (for admin users)
+- User management
 - Search and filter functionality
 - Responsive design
 
@@ -18,6 +18,7 @@ This is the frontend application for the Inventory Management System, built with
 - React Router
 - Axios for API calls
 - Tailwind CSS for styling
+- Vite for build tooling and development server
 - React Paginate for pagination
 - Cloudinary for image uploads
 
