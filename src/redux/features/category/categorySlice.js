@@ -74,7 +74,8 @@ export const deleteCategoryAsync = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await deleteCategory(id);
-      return response;
+      return { id, message: response.message };
+      // return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }

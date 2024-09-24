@@ -132,6 +132,11 @@ export const deleteCategory = async (categoryId) => {
     }
   } catch (error) {
     if (error.response) {
+      if (error.response.status === 400) {
+        throw new Error(
+          "Cannot delete category with existing items. Please remove or reassign items first."
+        );
+      }
       throw new Error(
         error.response.data.message || "Failed to delete category"
       );
