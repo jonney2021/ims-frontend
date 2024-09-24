@@ -9,6 +9,7 @@ import {
   FaExclamationTriangle,
   FaPlus,
 } from "react-icons/fa";
+import { format, parseISO } from "date-fns";
 
 const DashboardCard = ({ title, count, icon, color, link }) => (
   <Link to={link} className="block">
@@ -131,6 +132,9 @@ const Dashboard = () => {
                 <th className="p-3 text-sm font-semibold tracking-wide text-left">
                   Quantity
                 </th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                  Last Updated
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -150,6 +154,11 @@ const Dashboard = () => {
                     }`}
                   >
                     {item.quantity}
+                  </td>
+                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                    {item.lastUpdated
+                      ? format(parseISO(item.lastUpdated), "MMM d, yyyy HH:mm")
+                      : "N/A"}
                   </td>
                 </tr>
               ))}
