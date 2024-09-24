@@ -127,10 +127,19 @@ const Dashboard = () => {
                   Name
                 </th>
                 <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                  Item Code
+                </th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left">
                   Category
                 </th>
                 <th className="p-3 text-sm font-semibold tracking-wide text-left">
                   Quantity
+                </th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                  Reorder Level
+                </th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                  Status
                 </th>
                 <th className="p-3 text-sm font-semibold tracking-wide text-left">
                   Last Updated
@@ -144,6 +153,9 @@ const Dashboard = () => {
                     {item.name}
                   </td>
                   <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                    {item.itemCode}
+                  </td>
+                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                     {item.category?.name || "N/A"}
                   </td>
                   <td
@@ -154,6 +166,24 @@ const Dashboard = () => {
                     }`}
                   >
                     {item.quantity}
+                  </td>
+                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                    {item.reorderLevel}
+                  </td>
+                  <td className="p-3 text-sm whitespace-nowrap">
+                    {item.quantity === 0 ? (
+                      <span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full">
+                        Out of Stock
+                      </span>
+                    ) : item.quantity <= item.reorderLevel ? (
+                      <span className="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full">
+                        Low Stock
+                      </span>
+                    ) : (
+                      <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full">
+                        In Stock
+                      </span>
+                    )}
                   </td>
                   <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                     {item.lastUpdated

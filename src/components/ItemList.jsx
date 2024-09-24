@@ -148,15 +148,18 @@ const ItemList = () => {
                     "quantity",
                     "reorderLevel",
                     "category",
+                    "status",
+                    "lastUpdated",
                   ].map((key) => (
                     <th
                       key={key}
                       className="py-2 px-3 sm:py-3 sm:px-6 text-left cursor-pointer hover:bg-gray-700"
                       onClick={() => requestSort(key)}
                     >
-                      {/* {key.charAt(0).toUpperCase() + key.slice(1)} */}
                       {key === "reorderLevel"
                         ? "Reorder Level"
+                        : key === "lastUpdated"
+                        ? "Last Updated"
                         : key.charAt(0).toUpperCase() + key.slice(1)}
                       <FaSort className="inline ml-1" />
                     </th>
@@ -164,7 +167,7 @@ const ItemList = () => {
                   <th className="py-2 px-3 sm:py-3 sm:px-6 text-center">
                     Actions
                   </th>
-                  <th className="py-2 px-3 sm:py-3 sm:px-6 text-left cursor-pointer hover:bg-gray-700">
+                  <th className="py-2 px-3 sm:py-3 sm:px-6 text-left">
                     Low Stock Email
                   </th>
                 </tr>
@@ -195,6 +198,29 @@ const ItemList = () => {
                     </td>
                     <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
                       {item.category.name}
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                      {item.quantity === 0 ? (
+                        <span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full">
+                          Out of Stock
+                        </span>
+                      ) : item.quantity <= item.reorderLevel ? (
+                        <span className="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full">
+                          Low Stock
+                        </span>
+                      ) : (
+                        <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full">
+                          In Stock
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
+                      {item.lastUpdated
+                        ? format(
+                            new Date(item.lastUpdated),
+                            "MMM d, yyyy HH:mm"
+                          )
+                        : "N/A"}
                     </td>
                     <td className="py-2 px-3 sm:py-3 sm:px-6 text-center">
                       <div className="flex items-center justify-center space-x-2">
