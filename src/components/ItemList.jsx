@@ -57,6 +57,20 @@ const ItemList = () => {
           if (a.category.name > b.category.name) {
             return sortConfig.direction === "ascending" ? 1 : -1;
           }
+        } else if (sortConfig.key === "status") {
+          const getStatusPriority = (item) => {
+            if (item.quantity === 0) return 0; // Out of Stock
+            if (item.quantity <= item.reorderLevel) return 1; // Low Stock
+            return 2; // In Stock
+          };
+          const priorityA = getStatusPriority(a);
+          const priorityB = getStatusPriority(b);
+          if (priorityA < priorityB) {
+            return sortConfig.direction === "ascending" ? -1 : 1;
+          }
+          if (priorityA > priorityB) {
+            return sortConfig.direction === "ascending" ? 1 : -1;
+          }
         } else {
           if (a[sortConfig.key] < b[sortConfig.key]) {
             return sortConfig.direction === "ascending" ? -1 : 1;
@@ -146,7 +160,6 @@ const ItemList = () => {
                     "name",
                     "itemCode",
                     "quantity",
-                    "reorderLevel",
                     "category",
                     "status",
                     "lastUpdated",
@@ -156,9 +169,7 @@ const ItemList = () => {
                       className="py-2 px-3 sm:py-3 sm:px-6 text-left cursor-pointer hover:bg-gray-700"
                       onClick={() => requestSort(key)}
                     >
-                      {key === "reorderLevel"
-                        ? "Reorder Level"
-                        : key === "lastUpdated"
+                      {key === "lastUpdated"
                         ? "Last Updated"
                         : key.charAt(0).toUpperCase() + key.slice(1)}
                       <FaSort className="inline ml-1" />
@@ -192,9 +203,6 @@ const ItemList = () => {
                       }`}
                     >
                       {item.quantity}
-                    </td>
-                    <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
-                      {item.reorderLevel}
                     </td>
                     <td className="py-2 px-3 sm:py-3 sm:px-6 text-left">
                       {item.category.name}

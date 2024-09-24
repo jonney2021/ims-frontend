@@ -51,6 +51,22 @@ const ItemDetail = () => {
           <p className="font-semibold">Quantity:</p>
           <p>{item.quantity}</p>
         </div>
+        <div>
+          <p className="font-semibold">Reorder Level:</p>
+          <p>{item.reorderLevel}</p>
+        </div>
+        <div>
+          <p className="font-semibold">Status:</p>
+          <p>
+            {item.quantity === 0 ? (
+              <span className="text-red-600 font-semibold">Out of Stock</span>
+            ) : item.quantity <= item.reorderLevel ? (
+              <span className="text-yellow-600 font-semibold">Low Stock</span>
+            ) : (
+              <span className="text-green-600 font-semibold">In Stock</span>
+            )}
+          </p>
+        </div>
       </div>
       <div className="mt-4">
         <p className="font-semibold">Description:</p>
