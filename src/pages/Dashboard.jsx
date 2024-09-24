@@ -164,7 +164,16 @@ const Dashboard = () => {
               <tr key={item._id}>
                 <td>{item.name}</td>
                 <td>{item.category?.name || "N/A"}</td>
-                <td>{item.quantity}</td>
+                {/* <td>{item.quantity}</td> */}
+                <td
+                  className={
+                    item.quantity <= item.reorderLevel
+                      ? "font-bold text-red-600"
+                      : ""
+                  }
+                >
+                  {item.quantity}
+                </td>
               </tr>
             ))}
           </tbody>
