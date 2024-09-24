@@ -2,6 +2,36 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import {
+  FaBox,
+  FaLayerGroup,
+  FaUsers,
+  FaExclamationTriangle,
+  FaPlus,
+} from "react-icons/fa";
+
+const DashboardCard = ({ title, count, icon, color, link }) => (
+  <Link to={link} className="block">
+    <div
+      className={`bg-white p-6 rounded-lg shadow-md border-l-4 ${color} hover:shadow-lg transition-shadow`}
+    >
+      <div className="flex items-center">
+        <div
+          className={`p-3 rounded-full ${color.replace(
+            "border-",
+            "bg-"
+          )} bg-opacity-10 mr-4`}
+        >
+          {icon}
+        </div>
+        <div>
+          <p className="text-sm text-gray-600 uppercase">{title}</p>
+          <p className="text-2xl font-semibold text-gray-700">{count}</p>
+        </div>
+      </div>
+    </div>
+  </Link>
+);
 
 const Dashboard = () => {
   const [usersCount, setUsersCount] = useState(0);
@@ -20,9 +50,7 @@ const Dashboard = () => {
         const api = axios.create({
           baseURL: API_BASE_URL,
           withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         });
 
         const [usersResponse, categoriesResponse, itemsResponse] =
@@ -50,156 +78,106 @@ const Dashboard = () => {
   }, [API_BASE_URL]);
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-8">
-        <Link to="/items" className="block">
-          <div className="bg-blue-500 p-6 rounded shadow-md text-white hover:bg-blue-600 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-bold">Items</h3>
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                />
-              </svg>
-            </div>
-            <p className="text-2xl">{itemsCount}</p>
-          </div>
-        </Link>
-
-        <Link to="/categories" className="block">
-          <div className="bg-green-500 p-6 rounded shadow-md text-white hover:bg-green-600 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-bold">Categories</h3>
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                />
-              </svg>
-            </div>
-            <p className="text-2xl">{categoriesCount}</p>
-          </div>
-        </Link>
-
-        <Link to="/users" className="block">
-          <div className="bg-yellow-500 p-6 rounded shadow-md text-white hover:bg-yellow-600 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-bold">System Users</h3>
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                />
-              </svg>
-            </div>
-            <p className="text-2xl">{usersCount}</p>
-          </div>
-        </Link>
-
-        <Link to="/items/low-stock" className="block">
-          <div className="bg-red-500 p-6 rounded shadow-md text-white hover:bg-red-600 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-bold">Low Stock</h3>
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                />
-              </svg>
-            </div>
-            <p className="text-2xl">{lowStockCount}</p>
-          </div>
-        </Link>
+      <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+        <DashboardCard
+          title="Items"
+          count={itemsCount}
+          icon={<FaBox className="h-6 w-6" />}
+          color="border-blue-500"
+          link="/items"
+        />
+        <DashboardCard
+          title="Categories"
+          count={categoriesCount}
+          icon={<FaLayerGroup className="h-6 w-6" />}
+          color="border-green-500"
+          link="/categories"
+        />
+        <DashboardCard
+          title="System Users"
+          count={usersCount}
+          icon={<FaUsers className="h-6 w-6" />}
+          color="border-yellow-500"
+          link="/users"
+        />
+        <DashboardCard
+          title="Low Stock"
+          count={lowStockCount}
+          icon={<FaExclamationTriangle className="h-6 w-6" />}
+          color="border-red-500"
+          link="/items/low-stock"
+        />
       </div>
 
       {/* Recent Items */}
-      <div className="bg-white shadow-md rounded-lg p-4 mb-8">
-        <h2 className="text-xl font-bold mb-4">Recent Items</h2>
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="text-left">Name</th>
-              <th className="text-left">Category</th>
-              <th className="text-left">Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentItems.map((item) => (
-              <tr key={item._id}>
-                <td>{item.name}</td>
-                <td>{item.category?.name || "N/A"}</td>
-                {/* <td>{item.quantity}</td> */}
-                <td
-                  className={
-                    item.quantity <= item.reorderLevel
-                      ? "font-bold text-red-600"
-                      : ""
-                  }
-                >
-                  {item.quantity}
-                </td>
+      <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Recent Items
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                  Name
+                </th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                  Category
+                </th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                  Quantity
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {recentItems.map((item) => (
+                <tr key={item._id} className="bg-white">
+                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                    {item.name}
+                  </td>
+                  <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                    {item.category?.name || "N/A"}
+                  </td>
+                  <td
+                    className={`p-3 text-sm whitespace-nowrap ${
+                      item.quantity <= item.reorderLevel
+                        ? "font-bold text-red-600"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {item.quantity}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Quick Actions */}
       {isAdmin && (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           <Link
             to="/items/add-item"
-            className="bg-blue-500 text-white p-4 rounded shadow-md text-center"
+            className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg shadow-md text-center flex items-center justify-center transition-colors"
           >
-            Add New Item
+            <FaPlus className="mr-2" /> Add New Item
           </Link>
           <Link
             to="/categories/add-category"
-            className="bg-green-500 text-white p-4 rounded shadow-md text-center"
+            className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg shadow-md text-center flex items-center justify-center transition-colors"
           >
-            Add New Category
+            <FaPlus className="mr-2" /> Add New Category
           </Link>
           <Link
             to="/users/add-user"
-            className="bg-purple-500 text-white p-4 rounded shadow-md text-center"
+            className="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg shadow-md text-center flex items-center justify-center transition-colors"
           >
-            Add New User
+            <FaPlus className="mr-2" /> Add New User
           </Link>
         </div>
       )}
